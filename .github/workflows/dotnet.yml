@@ -1,4 +1,4 @@
-name: .NET
+name: .NET Core
 
 on:
   push:
@@ -18,8 +18,6 @@ jobs:
       with:
         dotnet-version: 5.0.x
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore /TechnicalTestAPI/ReservationsAPI/
     - name: Build
-      run: dotnet build --no-restore
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet build /TechnicalTestAPI/ReservationsAPI/ --no-restore
