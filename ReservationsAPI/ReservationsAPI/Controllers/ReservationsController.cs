@@ -21,6 +21,10 @@ namespace ReservationsAPI.Controllers
             _context = context;
         }
 
+        /// <summary>
+        /// Gets a formated representation of the reservations: Reservation id and the associated contact
+        /// </summary>
+        /// <returns>Reservation list</returns>
         // GET: api/Reservations
         [HttpGet]
         public ActionResult<IEnumerable<ReservationViewModel>> GetReservations()
@@ -35,6 +39,11 @@ namespace ReservationsAPI.Controllers
             return list;
         }
 
+        /// <summary>
+        /// Gets a reservation by id
+        /// </summary>
+        /// <param name="id">Reservation id</param>
+        /// <returns>An reservation object</returns>
         // GET: api/Reservations/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Reservation>> GetReservation(int id)
@@ -49,6 +58,12 @@ namespace ReservationsAPI.Controllers
             return reservation;
         }
 
+        /// <summary>
+        /// To edit a reservation
+        /// </summary>
+        /// <param name="id">Reservation id</param>
+        /// <param name="reservation">Object with updated properties</param>
+        /// <returns></returns>
         // PUT: api/Reservations/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
@@ -81,6 +96,11 @@ namespace ReservationsAPI.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Creates a reservation, if the user doesnt exists also create the user
+        /// </summary>
+        /// <param name="reservation">Reservation form</param>
+        /// <returns>Ok object if create, error if not</returns>
         // POST: api/Reservations
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
@@ -90,9 +110,9 @@ namespace ReservationsAPI.Controllers
             try
             {
                 int contactID = 0;
-                if (ContactExists(reservation.ContactName))
+                if (ContactExists(Convert.ToInt32(reservation.ContactID)))
                 {
-                    contactID = getContactID(reservation.ContactName);
+                    contactID = Convert.ToInt32(reservation.ContactID);
                 }
                 else
                 {
@@ -140,19 +160,24 @@ namespace ReservationsAPI.Controllers
             return reservation;
         }
 
+        /// <summary>
+        /// Checks if the reservation exists
+        /// </summary>
+        /// <param name="id">reservation id</param>
+        /// <returns>True if exists, false if not</returns>
         private bool ReservationExists(int id)
         {
             return _context.Reservations.Any(e => e.Id == id);
         }
 
-        private bool ContactExists(string name)
+        /// <summary>
+        /// Checks if the contact exists
+        /// </summary>
+        /// <param name="id">Contact id</param>
+        /// <returns>True if exists, false if not</returns>
+        private bool ContactExists(int id)
         {
-            return _context.Contacts.Any(e => e.ContactName == name);
-        }
-
-        private int getContactID(string name)
-        {
-            return _context.Contacts.Where(s => s.ContactName == name).FirstOrDefault().Id;
+            return _context.Contacts.Any(e => e.Id == id);
         }
     }
 }

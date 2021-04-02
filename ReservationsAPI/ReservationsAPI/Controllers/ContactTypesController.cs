@@ -20,6 +20,10 @@ namespace ReservationsAPI.Controllers
             _context = context;
         }
 
+        /// <summary>
+        /// Retrieve contact types 
+        /// </summary>
+        /// <returns>List of the contact types</returns>
         // GET: api/ContactTypes
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ContactType>>> GetContactTypes()

@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 
 namespace ReservationsAPI.Models
 {
+    /// <summary>
+    /// model to show in the list of reservations
+    /// </summary>
     public class ReservationViewModel
     {
         public int id { get; set; }

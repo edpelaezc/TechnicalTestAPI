@@ -5,8 +5,12 @@ using System.Threading.Tasks;
 
 namespace ReservationsAPI.Models
 {
+    /// <summary>
+    /// Model to help with the reservation form
+    /// </summary>
     public class ReservationForm
     {
+        public string ContactID { get; set; }
         public string ContactName { get; set; }
         public string ContactType { get; set; }
         public string Phone { get; set; }
