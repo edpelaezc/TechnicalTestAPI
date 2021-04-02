@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ReservationsAPI.Models;
+using Newtonsoft.Json;
 
 namespace ReservationsAPI.Controllers
 {
@@ -22,9 +23,16 @@ namespace ReservationsAPI.Controllers
 
         // GET: api/Reservations
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Reservation>>> GetReservations()
+        public ActionResult<IEnumerable<ReservationViewModel>> GetReservations()
         {
-            return await _context.Reservations.ToListAsync();
+            var list = (from reservations in _context.Reservations
+                        join contacts in _context.Contacts on reservations.ContactId equals contacts.Id
+                        select new ReservationViewModel()
+                        {
+                            id = reservations.Id,
+                            userName = contacts.ContactName
+                        }).ToList();
+            return list;
         }
 
         // GET: api/Reservations/5
@@ -77,12 +85,43 @@ namespace ReservationsAPI.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Reservation>> PostReservation(Reservation reservation)
+        public async Task<ActionResult<Reservation>> PostReservation(ReservationForm reservation)
         {
-            _context.Reservations.Add(reservation);
-            await _context.SaveChangesAsync();
+            try
+            {
+                int contactID = 0;
+                if (ContactExists(reservation.ContactName))
+                {
+                    contactID = getContactID(reservation.ContactName);
+                }
+                else
+                {
+                    Contact contact = new Contact()
+                    {
+                        ContactName = reservation.ContactName,
+                        BirthDate = Convert.ToDateTime(reservation.BirthDate),
+                        ContactTypeId = Convert.ToInt32(reservation.ContactType),
+                        PhoneNumber = reservation.Phone,
+                    };
 
-            return CreatedAtAction("GetReservation", new { id = reservation.Id }, reservation);
+                    _context.Contacts.Add(contact);
+                    _context.SaveChanges();
+                    contactID = contact.Id;
+                }
+
+                _context.Reservations.Add(new Reservation()
+                {
+                    ContactId = contactID,
+                    Description = reservation.editorContent
+                });
+
+                await _context.SaveChangesAsync();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return Problem(ex.Message);                
+            }           
         }
 
         // DELETE: api/Reservations/5
@@ -104,6 +143,16 @@ namespace ReservationsAPI.Controllers
         private bool ReservationExists(int id)
         {
             return _context.Reservations.Any(e => e.Id == id);
+        }
+
+        private bool ContactExists(string name)
+        {
+            return _context.Contacts.Any(e => e.ContactName == name);
+        }
+
+        private int getContactID(string name)
+        {
+            return _context.Contacts.Where(s => s.ContactName == name).FirstOrDefault().Id;
         }
     }
 }
