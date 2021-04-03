@@ -23,6 +23,7 @@ namespace ReservationsAPI.Models
 
         // stored procedures
         public virtual DbSet<ContactsViewModel> ContactsViewModels { get; set; }
+        public virtual DbSet<EditContactViewModel> EditContactViewModels { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

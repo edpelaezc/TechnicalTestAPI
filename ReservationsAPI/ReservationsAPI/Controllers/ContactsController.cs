@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ReservationsAPI.Models;
+using Newtonsoft;
 
 namespace ReservationsAPI.Controllers
 {
@@ -36,16 +37,18 @@ namespace ReservationsAPI.Controllers
 
         // GET: api/Contacts/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Contact>> GetContact(int id)
+        public ActionResult<EditContactViewModel> GetContact(int id)
         {
-            var contact = await _context.Contacts.FindAsync(id);
+            var contact = _context.EditContactViewModels.FromSqlInterpolated($"sp_GetContact {id}").ToList();
 
-            if (contact == null)
+            try
+            {
+                return contact.First();
+            }
+            catch (Exception)
             {
                 return NotFound();
             }
-
-            return contact;
         }
 
         // PUT: api/Contacts/5
@@ -84,12 +87,25 @@ namespace ReservationsAPI.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Contact>> PostContact(Contact contact)
+        public async Task<ActionResult<Contact>> PostContact(ContactsForm contact)
         {
-            _context.Contacts.Add(contact);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.Contacts.Add(new Contact() 
+                {
+                    ContactName = contact.ContactName,
+                    BirthDate = Convert.ToDateTime(contact.BirthDate),
+                    ContactTypeId = Convert.ToInt32(contact.ContactTypeId),
+                    PhoneNumber = contact.PhoneNumber
+                });
+                await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetContact", new { id = contact.Id }, contact);
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return Problem();                
+            }
         }
 
         // DELETE: api/Contacts/5
