@@ -21,6 +21,9 @@ namespace ReservationsAPI.Models
         public DbSet<ContactType> ContactTypes { get; set; }
         public DbSet<Reservation> Reservations { get; set; }
 
+        // stored procedures
+        public virtual DbSet<ContactsViewModel> ContactsViewModels { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)

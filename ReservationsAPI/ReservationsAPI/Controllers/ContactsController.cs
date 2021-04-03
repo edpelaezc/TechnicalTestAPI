@@ -27,6 +27,13 @@ namespace ReservationsAPI.Controllers
             return await _context.Contacts.ToListAsync();
         }
 
+        [HttpGet("/api/ContactsDetails")]
+        public ActionResult<IEnumerable<ContactsViewModel>> GetContactsDetails()
+        {
+            var list = _context.ContactsViewModels.FromSqlInterpolated($"sp_GetContactDetails").ToList();
+            return list;
+        }
+
         // GET: api/Contacts/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Contact>> GetContact(int id)
