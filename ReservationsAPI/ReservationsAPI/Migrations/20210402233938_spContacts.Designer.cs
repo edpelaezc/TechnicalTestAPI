@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ReservationsAPI.Models;
 
 namespace ReservationsAPI.Migrations
 {
     [DbContext(typeof(ReservationsContext))]
-    partial class ReservationsContextModelSnapshot : ModelSnapshot
+    [Migration("20210402233938_spContacts")]
+    partial class spContacts
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -60,26 +62,6 @@ namespace ReservationsAPI.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ContactTypes");
-                });
-
-            modelBuilder.Entity("ReservationsAPI.Models.ContactsViewModel", b =>
-                {
-                    b.Property<DateTime>("BirthDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ContactName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.ToTable("ContactsViewModels");
                 });
 
             modelBuilder.Entity("ReservationsAPI.Models.Reservation", b =>

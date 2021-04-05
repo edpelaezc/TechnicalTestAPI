@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace ReservationsAPI.Models
 {
+    /// <summary>
+    /// Contact model
+    /// </summary>
     public class Contact
     {
         public Contact()
