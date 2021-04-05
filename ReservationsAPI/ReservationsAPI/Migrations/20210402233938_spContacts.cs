@@ -8,8 +8,9 @@ namespace ReservationsAPI.Migrations
         {
             var sql = @"CREATE PROCEDURE [dbo].[sp_GetContactDetails]
                         AS
-                        BEGIN 
-                        SELECT C.Id, ContactName, BirthDate, Description, PhoneNumber FROM Contacts C INNER JOIN ContactTypes CT ON C.ContactTypeId = CT.Id
+						SELECT Id, ContactName, BirthDate, PhoneNumber,
+                        (SELECT Id, Description, CASE WHEN  CT.Id = C.ContactTypeId THEN 1 ELSE 0 END [Selected] FROM ContactTypes CT ORDER BY 3 DESC FOR JSON PATH) [Types]
+                        FROM Contacts C WHERE C.Id = @id
                         END";
 
             migrationBuilder.Sql(sql);

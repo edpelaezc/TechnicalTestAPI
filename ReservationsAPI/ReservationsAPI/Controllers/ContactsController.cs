@@ -55,32 +55,27 @@ namespace ReservationsAPI.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutContact(int id, Contact contact)
+        public async Task<IActionResult> PutContact(ContactsForm contact)
         {
-            if (id != contact.Id)
+
+            if (ContactExists(Convert.ToInt32(contact.id)))
+            {
+                _context.Entry(new Contact()
+                {
+                    Id = Convert.ToInt32(contact.id),
+                    ContactName = contact.ContactName,
+                    PhoneNumber = contact.PhoneNumber,
+                    BirthDate = Convert.ToDateTime(contact.BirthDate),
+                    ContactTypeId = Convert.ToInt32(contact.ContactTypeId)
+                }).State = EntityState.Modified;
+
+                await _context.SaveChangesAsync();
+                return Ok();
+            }
+            else
             {
                 return BadRequest();
             }
-
-            _context.Entry(contact).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ContactExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
         }
 
         // POST: api/Contacts

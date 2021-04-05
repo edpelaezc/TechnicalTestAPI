@@ -7,6 +7,7 @@ namespace ReservationsAPI.Models
 {
     public class ContactsForm
     {
+        public string id { get; set; }
         public string ContactName { get; set; }
         public string BirthDate { get; set; }
         public string ContactTypeId { get; set; }
