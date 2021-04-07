@@ -2,14 +2,14 @@
 
 namespace ReservationsAPI.Migrations
 {
-    public partial class spContacts : Migration
+    public partial class DeleteReservation : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            var sql = @"CREATE PROCEDURE [dbo].[sp_GetContactDetails]
+            var sql = @"CREATE PROCEDURE [dbo].[sp_DeleteReservation] @id int
                         AS
                         BEGIN 
-                        SELECT C.Id, ContactName, BirthDate, Description, PhoneNumber FROM Contacts C INNER JOIN ContactTypes CT ON C.ContactTypeId = CT.Id
+                        DELETE FROM Reservations WHERE Id = @id
                         END";
 
             migrationBuilder.Sql(sql);

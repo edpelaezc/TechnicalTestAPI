@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ReservationsAPI.Models;
 
 namespace ReservationsAPI.Migrations
 {
     [DbContext(typeof(ReservationsContext))]
-    partial class ReservationsContextModelSnapshot : ModelSnapshot
+    [Migration("20210406224648_spGetReservation")]
+    partial class spGetReservation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -62,28 +64,7 @@ namespace ReservationsAPI.Migrations
                     b.ToTable("ContactTypes");
                 });
 
-            modelBuilder.Entity("ReservationsAPI.Models.Reservation", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("ContactId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ContactId");
-
-                    b.ToTable("Reservations");
-                });
-
-            modelBuilder.Entity("ReservationsAPI.Models.ViewModels.ContactsViewModel", b =>
+            modelBuilder.Entity("ReservationsAPI.Models.ContactsViewModel", b =>
                 {
                     b.Property<DateTime>("BirthDate")
                         .HasColumnType("datetime2");
@@ -103,7 +84,7 @@ namespace ReservationsAPI.Migrations
                     b.ToTable("ContactsViewModels");
                 });
 
-            modelBuilder.Entity("ReservationsAPI.Models.ViewModels.EditContactViewModel", b =>
+            modelBuilder.Entity("ReservationsAPI.Models.EditContactViewModel", b =>
                 {
                     b.Property<DateTime>("BirthDate")
                         .HasColumnType("datetime2");
@@ -123,37 +104,25 @@ namespace ReservationsAPI.Migrations
                     b.ToTable("EditContactViewModels");
                 });
 
-            modelBuilder.Entity("ReservationsAPI.Models.ViewModels.EditReservationViewModel", b =>
+            modelBuilder.Entity("ReservationsAPI.Models.Reservation", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime>("BirthDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<int>("ContactId")
                         .HasColumnType("int");
 
-                    b.Property<string>("ContactName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ContactType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ContactTypeId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("EditReservationViewModels");
+                    b.HasIndex("ContactId");
+
+                    b.ToTable("Reservations");
                 });
 
             modelBuilder.Entity("ReservationsAPI.Models.Contact", b =>

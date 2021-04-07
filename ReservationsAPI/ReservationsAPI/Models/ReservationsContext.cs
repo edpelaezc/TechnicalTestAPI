@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ReservationsAPI.Models.ViewModels;
 
 namespace ReservationsAPI.Models
 {
@@ -24,6 +25,7 @@ namespace ReservationsAPI.Models
         // stored procedures
         public virtual DbSet<ContactsViewModel> ContactsViewModels { get; set; }
         public virtual DbSet<EditContactViewModel> EditContactViewModels { get; set; }
+        public virtual DbSet<EditReservationViewModel> EditReservationViewModels { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

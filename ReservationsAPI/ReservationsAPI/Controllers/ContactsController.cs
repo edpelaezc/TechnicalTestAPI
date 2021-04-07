@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ReservationsAPI.Models;
+using ReservationsAPI.Models.ViewModels;
 using Newtonsoft;
 
 namespace ReservationsAPI.Controllers

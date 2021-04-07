@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ReservationsAPI.Models
+namespace ReservationsAPI.Models.ViewModels
 {
     [Keyless]
     public class EditContactViewModel
