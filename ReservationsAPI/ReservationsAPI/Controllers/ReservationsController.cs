@@ -134,11 +134,11 @@ namespace ReservationsAPI.Controllers
 
         // DELETE: api/Reservations/5
         [HttpDelete("{id}")]
-        public ActionResult DeleteReservation(int id)
+        public async Task<ActionResult<Reservation>> DeleteReservation(int id)
         {
             if (ReservationExists(id))
             {
-                var result = _context.Database.ExecuteSqlInterpolatedAsync($"sp_DeleteReservation {id}");
+                var result = await _context.Database.ExecuteSqlInterpolatedAsync($"sp_DeleteReservation {id}");
                 return Ok();
             }
             else
