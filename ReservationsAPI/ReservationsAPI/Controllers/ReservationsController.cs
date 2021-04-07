@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ReservationsAPI.Models;
+using ReservationsAPI.Models.ViewModels;
 using Newtonsoft.Json;
 
 namespace ReservationsAPI.Controllers
@@ -46,16 +47,18 @@ namespace ReservationsAPI.Controllers
         /// <returns>An reservation object</returns>
         // GET: api/Reservations/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Reservation>> GetReservation(int id)
+        public ActionResult<EditReservationViewModel> GetReservation(int id)
         {
-            var reservation = await _context.Reservations.FindAsync(id);
+            var reservation = _context.EditReservationViewModels.FromSqlInterpolated($"sp_GetReservation {id}").ToList();
 
-            if (reservation == null)
+            try
+            {
+                return reservation.First();
+            }
+            catch (Exception)
             {
                 return NotFound();
             }
-
-            return reservation;
         }
 
         /// <summary>
@@ -68,32 +71,17 @@ namespace ReservationsAPI.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutReservation(int id, Reservation reservation)
+        public ActionResult PutReservation(int id, EditReservationViewModel reservation)
         {
-            if (id != reservation.Id)
+            if (ReservationExists(id))
+            {
+                var test = _context.Database.ExecuteSqlInterpolated($"sp_UpdateReservation {id}, {reservation.ContactId}, {reservation.Description}");
+                return Ok();
+            }
+            else
             {
                 return BadRequest();
             }
-
-            _context.Entry(reservation).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ReservationExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
         }
 
         /// <summary>
@@ -146,18 +134,17 @@ namespace ReservationsAPI.Controllers
 
         // DELETE: api/Reservations/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Reservation>> DeleteReservation(int id)
+        public async Task<ActionResult> DeleteReservation(int id)
         {
-            var reservation = await _context.Reservations.FindAsync(id);
-            if (reservation == null)
+            if (ReservationExists(id))
             {
-                return NotFound();
+                var result = await _context.Database.ExecuteSqlInterpolatedAsync($"sp_DeleteReservation {id}");
+                return Ok(200);
             }
-
-            _context.Reservations.Remove(reservation);
-            await _context.SaveChangesAsync();
-
-            return reservation;
+            else
+            {
+                return BadRequest();
+            }
         }
 
         /// <summary>
