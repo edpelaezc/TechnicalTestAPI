@@ -12,6 +12,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using ReservationsAPI.Models;
+using ReservationsAPI.Services.Interfaces;
+using ReservationsAPI.Services;
 
 namespace ReservationsAPI
 {
@@ -31,6 +33,8 @@ namespace ReservationsAPI
 
             services.AddDbContext<ReservationsContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnectionString")));
+
+            services.AddScoped(typeof(IContactsService), typeof(ContactsService));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
