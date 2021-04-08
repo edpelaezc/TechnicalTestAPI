@@ -35,7 +35,7 @@ namespace ReservationsAPI.Models
             }
         }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        /*protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             List<ContactType> range = new List<ContactType>()
             {
@@ -44,6 +44,6 @@ namespace ReservationsAPI.Models
                 new ContactType() { Id = 3, Description = "Contact Type 3" }
             };
             modelBuilder.Entity<ContactType>().HasData(range);
-        }
+        }*/
     }
 }
