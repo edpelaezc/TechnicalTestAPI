@@ -34,5 +34,16 @@ namespace ReservationsAPI.Models
                 optionsBuilder.UseSqlServer(Configuration.GetConnectionString("DefaultConnectionString"));
             }
         }
+
+        /*protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            List<ContactType> range = new List<ContactType>()
+            {
+                new ContactType() { Id = 1, Description = "Contact Type 1" },
+                new ContactType() { Id = 2, Description = "Contact Type 2" },
+                new ContactType() { Id = 3, Description = "Contact Type 3" }
+            };
+            modelBuilder.Entity<ContactType>().HasData(range);
+        }*/
     }
 }
