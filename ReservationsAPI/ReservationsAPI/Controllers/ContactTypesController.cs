@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using ReservationsAPI.Services.Interfaces;
 using ReservationsAPI.Models;
 
 namespace ReservationsAPI.Controllers
@@ -13,11 +14,11 @@ namespace ReservationsAPI.Controllers
     [ApiController]
     public class ContactTypesController : ControllerBase
     {
-        private readonly ReservationsContext _context;
+        private readonly IContactTypesService _contactTypesService;
 
-        public ContactTypesController(ReservationsContext context)
+        public ContactTypesController(IContactTypesService service)
         {
-            _context = context;
+            _contactTypesService = service;
         }
 
         /// <summary>
@@ -28,7 +29,7 @@ namespace ReservationsAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ContactType>>> GetContactTypes()
         {
-            return await _context.ContactTypes.ToListAsync();
+            return await _contactTypesService.GetContactTypesAsync();
         }
     }
 }

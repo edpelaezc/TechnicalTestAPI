@@ -26,6 +26,7 @@ namespace ReservationsAPI.Services
 
         public async Task<ActionResult<Contact>> DeleteContactAsync(int id)
         {
+            // search the contact
             var contact = await _context.Contacts.FindAsync(id);
             if (contact == null)
             {
@@ -40,6 +41,7 @@ namespace ReservationsAPI.Services
 
         public ActionResult<IEnumerable<ContactsViewModel>> GetContactsList()
         {
+            // get formatted data to the contacts list
             var list = _context.ContactsViewModels.FromSqlInterpolated($"sp_GetContactDetails").ToList();
             return list;
         }
@@ -48,6 +50,7 @@ namespace ReservationsAPI.Services
         {
             try
             {
+                // add a new contact
                 _context.Contacts.Add(new Contact()
                 {
                     ContactName = contact.ContactName,
@@ -69,6 +72,7 @@ namespace ReservationsAPI.Services
         {
             if (ContactExists(Convert.ToInt32(contact.id)))
             {
+                // set the values from the from 
                 _context.Entry(new Contact()
                 {
                     Id = Convert.ToInt32(contact.id),
