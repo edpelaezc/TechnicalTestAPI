@@ -20,6 +20,7 @@ namespace ReservationsAPI.Services
 
         public async Task<ActionResult<IEnumerable<ContactType>>> GetContactTypesAsync()
         {
+            // get the list of contact types
             return await _context.ContactTypes.ToListAsync();
         }
     }

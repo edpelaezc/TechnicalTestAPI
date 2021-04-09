@@ -11,7 +11,7 @@ namespace ReservationsAPI.Migrations
                         AS
                         BEGIN 
                         SELECT Id, ContactName, BirthDate, PhoneNumber,
-                        (SELECT Id, Description, CASE WHEN  CT.Id = C.ContactTypeId THEN 1 ELSE 0 END [Selected] FROM ContactTypes CT FOR JSON PATH) [Types]
+                        (SELECT Id, Description, CASE WHEN  CT.Id = C.ContactTypeId THEN 1 ELSE 0 END [Selected] FROM ContactTypes CT ORDER BY 3 DESC FOR JSON PATH) [Types]
                         FROM Contacts C WHERE C.Id = @id 
                         END";
 

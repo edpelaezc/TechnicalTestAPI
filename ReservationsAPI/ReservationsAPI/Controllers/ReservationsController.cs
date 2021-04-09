@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using ReservationsAPI.Models;
 using ReservationsAPI.Models.ViewModels;
 using Newtonsoft.Json;
+using ReservationsAPI.Services.Interfaces;
 
 namespace ReservationsAPI.Controllers
 {
@@ -15,11 +16,11 @@ namespace ReservationsAPI.Controllers
     [ApiController]
     public class ReservationsController : ControllerBase
     {
-        private readonly ReservationsContext _context;
+        private readonly IReservationsService _reservationsService;
 
-        public ReservationsController(ReservationsContext context)
+        public ReservationsController(IReservationsService service)
         {
-            _context = context;
+            _reservationsService = service;
         }
 
         /// <summary>
@@ -30,14 +31,7 @@ namespace ReservationsAPI.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<ReservationViewModel>> GetReservations()
         {
-            var list = (from reservations in _context.Reservations
-                        join contacts in _context.Contacts on reservations.ContactId equals contacts.Id
-                        select new ReservationViewModel()
-                        {
-                            id = reservations.Id,
-                            userName = contacts.ContactName
-                        }).ToList();
-            return list;
+            return _reservationsService.GetReservations();
         }
 
         /// <summary>
@@ -49,16 +43,7 @@ namespace ReservationsAPI.Controllers
         [HttpGet("{id}")]
         public ActionResult<EditReservationViewModel> GetReservation(int id)
         {
-            var reservation = _context.EditReservationViewModels.FromSqlInterpolated($"sp_GetReservation {id}").ToList();
-
-            try
-            {
-                return reservation.First();
-            }
-            catch (Exception)
-            {
-                return NotFound();
-            }
+            return _reservationsService.GetReservation(id);
         }
 
         /// <summary>
@@ -73,15 +58,14 @@ namespace ReservationsAPI.Controllers
         [HttpPut("{id}")]
         public ActionResult PutReservation(int id, EditReservationViewModel reservation)
         {
-            if (ReservationExists(id))
+            bool result = _reservationsService.PutReservation(id, reservation);
+
+            if (result)
             {
-                var test = _context.Database.ExecuteSqlInterpolated($"sp_UpdateReservation {id}, {reservation.ContactId}, {reservation.Description}");
                 return Ok();
             }
-            else
-            {
-                return BadRequest();
-            }
+
+            return BadRequest();
         }
 
         /// <summary>
@@ -95,76 +79,28 @@ namespace ReservationsAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Reservation>> PostReservation(ReservationForm reservation)
         {
-            try
+            var result = await _reservationsService.PostReservation(reservation);
+
+            if (result)
             {
-                int contactID = 0;
-                if (ContactExists(Convert.ToInt32(reservation.ContactID)))
-                {
-                    contactID = Convert.ToInt32(reservation.ContactID);
-                }
-                else
-                {
-                    Contact contact = new Contact()
-                    {
-                        ContactName = reservation.ContactName,
-                        BirthDate = Convert.ToDateTime(reservation.BirthDate),
-                        ContactTypeId = Convert.ToInt32(reservation.ContactType),
-                        PhoneNumber = reservation.Phone,
-                    };
-
-                    _context.Contacts.Add(contact);
-                    _context.SaveChanges();
-                    contactID = contact.Id;
-                }
-
-                _context.Reservations.Add(new Reservation()
-                {
-                    ContactId = contactID,
-                    Description = reservation.editorContent
-                });
-
-                await _context.SaveChangesAsync();
                 return Ok();
             }
-            catch (Exception ex)
-            {
-                return Problem(ex.Message);                
-            }           
+
+            return Problem();
         }
 
         // DELETE: api/Reservations/5
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteReservation(int id)
         {
-            if (ReservationExists(id))
+            bool result = await _reservationsService.DeleteReservation(id);
+
+            if (result)
             {
-                var result = await _context.Database.ExecuteSqlInterpolatedAsync($"sp_DeleteReservation {id}");
                 return Ok(200);
             }
-            else
-            {
-                return BadRequest();
-            }
-        }
 
-        /// <summary>
-        /// Checks if the reservation exists
-        /// </summary>
-        /// <param name="id">reservation id</param>
-        /// <returns>True if exists, false if not</returns>
-        private bool ReservationExists(int id)
-        {
-            return _context.Reservations.Any(e => e.Id == id);
-        }
-
-        /// <summary>
-        /// Checks if the contact exists
-        /// </summary>
-        /// <param name="id">Contact id</param>
-        /// <returns>True if exists, false if not</returns>
-        private bool ContactExists(int id)
-        {
-            return _context.Contacts.Any(e => e.Id == id);
+            return BadRequest();
         }
     }
 }

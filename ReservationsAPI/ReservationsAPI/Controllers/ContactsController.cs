@@ -30,6 +30,10 @@ namespace ReservationsAPI.Controllers
             return await _contactsService.GetContactsAsync();
         }
 
+        /// <summary>
+        /// method to get the data in the users table
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("/api/ContactsDetails")]
         public ActionResult<IEnumerable<ContactsViewModel>> GetContactsDetails()
         {
