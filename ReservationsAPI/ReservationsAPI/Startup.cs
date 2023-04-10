@@ -15,6 +15,8 @@ using ReservationsAPI.Models;
 using ReservationsAPI.Services.Interfaces;
 using ReservationsAPI.Services;
 
+// migrated to new minimal hosting model of netcore >6
+/*
 namespace ReservationsAPI
 {
     public class Startup
@@ -66,3 +68,4 @@ namespace ReservationsAPI
         }
     }
 }
+*/
