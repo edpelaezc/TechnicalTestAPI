@@ -5,30 +5,35 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using ReservationsAPI.Models;
+using Repository;
+
+#nullable disable
 
 namespace ReservationsAPI.Migrations
 {
-    [DbContext(typeof(ReservationsContext))]
-    [Migration("20210330225506_Initial")]
-    partial class Initial
+    [DbContext(typeof(RepositoryContext))]
+    [Migration("20230410033747_InitialMigration")]
+    partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.4")
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("ProductVersion", "6.0.4")
+                .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            modelBuilder.Entity("ReservationsAPI.Models.Contact", b =>
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+
+            modelBuilder.Entity("Entities.Models.Contact", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
 
-                    b.Property<DateTime>("BirthDate")
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime?>("BirthDate")
+                        .IsRequired()
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ContactName")
@@ -39,6 +44,7 @@ namespace ReservationsAPI.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("PhoneNumber")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -46,30 +52,60 @@ namespace ReservationsAPI.Migrations
                     b.HasIndex("ContactTypeId");
 
                     b.ToTable("Contacts");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            BirthDate = new DateTime(1993, 4, 9, 21, 37, 47, 290, DateTimeKind.Local).AddTicks(7080),
+                            ContactName = "Ed Pelaez",
+                            ContactTypeId = 1,
+                            PhoneNumber = "50242721382"
+                        });
                 });
 
-            modelBuilder.Entity("ReservationsAPI.Models.ContactType", b =>
+            modelBuilder.Entity("Entities.Models.ContactType", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.ToTable("ContactTypes");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "System administrator",
+                            Name = "ADMIN"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "Normal system user",
+                            Name = "USER"
+                        });
                 });
 
-            modelBuilder.Entity("ReservationsAPI.Models.Reservation", b =>
+            modelBuilder.Entity("Entities.Models.Reservation", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<int>("ContactId")
                         .HasColumnType("int");
@@ -85,9 +121,9 @@ namespace ReservationsAPI.Migrations
                     b.ToTable("Reservations");
                 });
 
-            modelBuilder.Entity("ReservationsAPI.Models.Contact", b =>
+            modelBuilder.Entity("Entities.Models.Contact", b =>
                 {
-                    b.HasOne("ReservationsAPI.Models.ContactType", "ContactType")
+                    b.HasOne("Entities.Models.ContactType", "ContactType")
                         .WithMany("Contacts")
                         .HasForeignKey("ContactTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -96,9 +132,9 @@ namespace ReservationsAPI.Migrations
                     b.Navigation("ContactType");
                 });
 
-            modelBuilder.Entity("ReservationsAPI.Models.Reservation", b =>
+            modelBuilder.Entity("Entities.Models.Reservation", b =>
                 {
-                    b.HasOne("ReservationsAPI.Models.Contact", "Contact")
+                    b.HasOne("Entities.Models.Contact", "Contact")
                         .WithMany("Reservations")
                         .HasForeignKey("ContactId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -107,12 +143,12 @@ namespace ReservationsAPI.Migrations
                     b.Navigation("Contact");
                 });
 
-            modelBuilder.Entity("ReservationsAPI.Models.Contact", b =>
+            modelBuilder.Entity("Entities.Models.Contact", b =>
                 {
                     b.Navigation("Reservations");
                 });
 
-            modelBuilder.Entity("ReservationsAPI.Models.ContactType", b =>
+            modelBuilder.Entity("Entities.Models.ContactType", b =>
                 {
                     b.Navigation("Contacts");
                 });

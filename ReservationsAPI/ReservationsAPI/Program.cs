@@ -47,11 +47,16 @@ builder.Services.ConfigureCors();
 builder.Services.ConfigureIISIntegration();
 builder.Services.ConfigureLoggerService();
 builder.Services.ConfigureSqlContext(builder.Configuration);
+builder.Services.ConfigureRepositoryManager();
 
 
+builder.Services.AddControllers(config => {
+    config.RespectBrowserAcceptHeader = true;
+    config.ReturnHttpNotAcceptable = true;
+}).AddXmlDataContractSerializerFormatters()
+.AddApplicationPart(typeof(ReservationsAPI.Presentation.AssemblyReference).Assembly);
 
-
-
+builder.Services.AddControllers().AddApplicationPart(typeof(ReservationsAPI.Presentation.AssemblyReference).Assembly);
 
 
 var app = builder.Build();
