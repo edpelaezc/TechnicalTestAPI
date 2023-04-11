@@ -17,7 +17,7 @@ namespace Repository.Configuration
                     ContactName = "Ed Pelaez",
                     BirthDate = DateTime.Now.AddYears(-30),
                     ContactTypeId = 1,
-                    PhoneNumber = "50242721382",
+                    PhoneNumber = "50212345678",
                 }
             );
         }

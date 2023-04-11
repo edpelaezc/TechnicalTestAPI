@@ -18,11 +18,11 @@ namespace Repository
             _reservationRepository = new Lazy<IReservationRepository>(() => new ReservationRepository(repositoryContext));
         }
 
-        public IContactRepository contactRepository => _contactRepository.Value;
+        public IContactRepository Contact => _contactRepository.Value;
 
-        public IContactTypeRepository contactTypeRepository => _contactTypeRepository.Value;
+        public IContactTypeRepository ContactType => _contactTypeRepository.Value;
 
-        public IReservationRepository reservationRepository => _reservationRepository.Value;
+        public IReservationRepository Reservation => _reservationRepository.Value;
 
         public async Task SaveAsync()
         {

@@ -23,7 +23,7 @@ namespace Repository
 
         public async Task<IEnumerable<Contact>> GetAllContactsAsync(bool trackChanges)
         {
-            return await FindAll(trackChanges).OrderBy(c => c.ContactName).ToListAsync();
+            return await FindAll(trackChanges).Include(c => c.ContactType).OrderBy(c => c.ContactName).ToListAsync();
         }
 
 #pragma warning disable CS8603 // Possible null reference return.

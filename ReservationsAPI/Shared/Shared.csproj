@@ -6,4 +6,12 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="DataTransferObjects\" />
+    <None Remove="DataTransferObjects\Contact\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="DataTransferObjects\" />
+    <Folder Include="DataTransferObjects\Contact\" />
+  </ItemGroup>
 </Project>

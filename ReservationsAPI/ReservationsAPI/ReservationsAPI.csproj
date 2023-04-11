@@ -35,5 +35,8 @@
     <ProjectReference Include="..\ReservationsAPI.Presentation\ReservationsAPI.Presentation.csproj">
       <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
     </ProjectReference>
+    <ProjectReference Include="..\Service\Service.csproj">
+      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
+    </ProjectReference>
   </ItemGroup>
 </Project>
