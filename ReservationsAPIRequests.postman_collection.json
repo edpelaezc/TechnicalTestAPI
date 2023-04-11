@@ -1,0 +1,66 @@
+{
+	"info": {
+		"_postman_id": "bb10d192-3694-4105-9053-f539cdc0ae2f",
+		"name": "ReservationsAPIRequests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "10079346"
+	},
+	"item": [
+		{
+			"name": "Get contact",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:38788/api/contacts",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "38788",
+					"path": [
+						"api",
+						"contacts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update contact",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n        \"contactName\": \"Edu Pelaez\",\n        \"birthDate\": \"1993-04-09T21:37:47.290708\",\n        \"contactTypeId\": 2,\n        \"phoneNumber\": \"50212345678\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:38788/api/contacts/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "38788",
+					"path": [
+						"api",
+						"contacts",
+						"1"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
